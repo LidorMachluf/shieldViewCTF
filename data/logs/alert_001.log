@@ -1,0 +1,3 @@
+2024-12-10 14:32:01 [CRITICAL] endpoint-agent prod-web-03: Process mimikatz.exe executed by svc-backup (PID 8841)
+2024-12-10 14:32:02 [INFO] endpoint-agent: Hash verification: a4b35de71b20...
+2024-12-10 14:32:03 [ACTION] endpoint-agent: Process terminated, host flagged for review

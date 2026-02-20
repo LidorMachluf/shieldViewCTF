@@ -1,0 +1,4 @@
+2024-12-14 00:00:00 [INFO] shieldview-soc: Daily rotation started
+2024-12-14 00:00:01 [INFO] db: WAL checkpoint completed
+2024-12-14 00:00:02 [INFO] auth: Session cleanup - 12 expired sessions removed
+2024-12-14 00:00:03 [INFO] webhook: Flush queue - 0 pending events

@@ -1,0 +1,3 @@
+2024-12-12 09:45:11 [CRITICAL] cloudtrail: S3 bucket ACL change detected
+2024-12-12 09:45:11 [INFO] cloudtrail: Bucket shieldview-prod-backups set to public-read by deploy-bot
+2024-12-12 09:45:12 [ACTION] s3-guard: ACL reverted, alert escalated to IR team

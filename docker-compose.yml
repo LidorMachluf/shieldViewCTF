@@ -1,0 +1,20 @@
+services:
+  shieldview:
+    build: .
+    ports:
+      - "8080:5000"
+    environment:
+      - SHIELDVIEW_WEBHOOK_URL=${SHIELDVIEW_WEBHOOK_URL:-}
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY:-shieldview-prod-key-2024}
+      - SHIELDVIEW_DATA_DIR=/data
+    volumes:
+      - shieldview-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 512m
+    cpus: 1.0
+    restart: unless-stopped
+
+volumes:
+  shieldview-data:
