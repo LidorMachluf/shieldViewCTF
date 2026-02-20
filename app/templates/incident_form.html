@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}New Report — ShieldView SOC{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>New Incident Report</h1>
+    <a href="{{ url_for('incidents.incident_list') }}" class="btn btn-secondary">&larr; Back to Reports</a>
+</div>
+
+<div class="page-content">
+    <div class="card" style="max-width: 700px;">
+        {% if error %}
+        <div class="login-error" style="margin-bottom: 20px;">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('incidents.incident_create') }}">
+            <div class="form-group">
+                <label for="title">Report Title</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="Brief description of the incident" required maxlength="200">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Report Content</label>
+                <textarea id="content" name="content" class="form-input" rows="8" placeholder="Detailed analysis of the incident, including indicators of compromise, affected systems, and recommended actions..." required style="resize: vertical; min-height: 140px;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                    <label for="alert_id">Related Alert ID (optional)</label>
+                    <input type="number" id="alert_id" name="alert_id" class="form-input" placeholder="e.g. 5" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" class="form-input">
+                        <option value="open">Open</option>
+                        <option value="investigating">Investigating</option>
+                        <option value="escalated">Escalated</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 8px;">
+                <button type="submit" class="btn btn-primary">Submit Report</button>
+                <a href="{{ url_for('incidents.incident_list') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

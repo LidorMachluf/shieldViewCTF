@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Search — ShieldView SOC{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Search Alerts</h1>
+</div>
+
+<div class="page-content">
+    <form method="GET" action="{{ url_for('search.search') }}" class="search-bar">
+        <input type="text" name="q" class="form-input" placeholder="Search alerts by keyword..." value="{{ raw_query }}">
+        <button type="submit" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+        </button>
+    </form>
+
+    {# VULNERABILITY 3: Hidden flag — only discoverable via XSS (document.getElementById) or DOM inspector #}
+    <div id="internal-token" style="display:none" data-token="{{ xss_flag }}">{{ xss_flag }}</div>
+
+    {% if query %}
+    {# VULNERABILITY 3: XSS — query is rendered with |safe via Markup() in the route #}
+    <div class="search-results-info">
+        Showing results for: <strong>{{ query }}</strong> &mdash; {{ result_count }} result{{ 's' if result_count != 1 else '' }} found
+    </div>
+    {% endif %}
+
+    {% if results %}
+    <div class="card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Severity</th>
+                    <th>Title</th>
+                    <th>Asset</th>
+                    <th>Source IP</th>
+                    <th style="width: 160px;">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in results %}
+                <tr class="clickable" onclick="window.location='{{ url_for('alerts.alert_detail', alert_id=alert.id) }}'">
+                    <td><span class="badge badge-{{ alert.severity | lower }}">{{ alert.severity }}</span></td>
+                    <td>{{ alert.title }}</td>
+                    <td><span class="mono">{{ alert.asset_hostname }}</span></td>
+                    <td><span class="mono">{{ alert.source_ip }}</span></td>
+                    <td><span class="mono text-secondary">{{ alert.created_at[:16] | replace('T', ' ') if 'T' in (alert.created_at or '') else alert.created_at }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif query %}
+    <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; opacity: 0.5;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>No alerts match your search.</p>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; opacity: 0.5;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>Enter a keyword to search through security alerts.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

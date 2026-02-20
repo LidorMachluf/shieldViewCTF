@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Report #{{ report.id }} — ShieldView SOC{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Report #{{ report.id }}</h1>
+    <a href="{{ url_for('incidents.incident_list') }}" class="btn btn-secondary">&larr; Back to Reports</a>
+</div>
+
+<div class="page-content">
+    <div class="breadcrumb">
+        <a href="{{ url_for('incidents.incident_list') }}">Incident Reports</a>
+        <span class="sep">/</span>
+        <span>Report #{{ report.id }}</span>
+    </div>
+
+    <div class="card mb-4">
+        <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px;">
+            <div style="flex-shrink:0; width: 44px; height: 44px; border-radius: 10px; background: var(--accent-subtle); display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <span class="report-status status-{{ report.status }}">{{ report.status }}</span>
+                    <span class="mono text-muted" style="font-size: 12px;">#{{ report.id }}</span>
+                </div>
+                <h2 style="font-size: 19px; font-weight: 700; line-height: 1.3;">{{ report.title }}</h2>
+            </div>
+        </div>
+
+        <div class="alert-detail-grid" style="margin-bottom: 24px;">
+            <div class="detail-item">
+                <div class="detail-label">Author</div>
+                <div class="detail-value">{{ report.author_name }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Status</div>
+                <div class="detail-value" style="text-transform: capitalize;">{{ report.status }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Related Alert</div>
+                <div class="detail-value">
+                    {% if report.alert_id %}
+                    <a href="{{ url_for('alerts.alert_detail', alert_id=report.alert_id) }}" class="mono">#{{ report.alert_id }}</a>
+                    {% else %}
+                    <span class="text-muted">None</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Created</div>
+                <div class="detail-value mono">{{ report.created_at[:16] | replace('T', ' ') if 'T' in (report.created_at or '') else report.created_at }}</div>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-label" style="margin-bottom: 10px;">Report Content</div>
+            {# VULNERABILITY H11: Stored XSS — content rendered as raw HTML via Markup() #}
+            <div class="report-content-body">{{ safe_content }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

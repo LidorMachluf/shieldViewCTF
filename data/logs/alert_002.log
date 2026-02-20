@@ -1,0 +1,3 @@
+2024-12-11 03:15:22 [ALERT] ids: SSH brute force detected
+2024-12-11 03:15:22 [INFO] ids: Source 203.0.113.89 -> 10.0.2.50:22, 847 attempts in 300s
+2024-12-11 03:15:23 [ACTION] firewall: Source IP blocked for 24h
